@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 # Definindo as opções de status
 STATUS = (
@@ -22,3 +23,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title  # Retorna o título do post como representação do objeto
+    
+    # Método para gerar o slug automaticamente, caso não tenha sido fornecido
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
